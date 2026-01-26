@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"       // add mongodb as provider for connecting with mongodb
+  url      = env("DATABASE_URL")
+}
+
+model Category{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String @unique
+    description String
+    product Product[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Product{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+    description String
+    cat Category? @relation(fields: [category], references: [name])
+    category String? 
+    images String[]
+    price String
+    discount String?
+    specification Json
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt 
+}
+
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum paymentMethod {
+    COD
+    ONLINE
+}
+
+type ProductItem {
+  productId String @db.ObjectId  // reference to Product's _id
+  quantity  Int?
+  price String
+}
+
+model Order{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    userId String
+    email String
+    fullName String
+    phone String
+    address String
+    city String
+    state String
+    pin String
+    paymentMethod paymentMethod @default(COD)
+    totalPrice String
+    products  ProductItem[]
+    status Status @default(PENDING)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
