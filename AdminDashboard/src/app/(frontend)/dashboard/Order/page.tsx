@@ -152,7 +152,7 @@ export default function OrdersPage() {
 
                                 <TableBody>
                                     {filteredOrders.map((order) => (
-                                        <TableRow key={order.id} className="hover:bg-blue-50 cursor-pointer" onClick={()=> router.push(`/dashboard/Order/${order.id}`) }>
+                                        <TableRow key={order.id} className="hover:bg-blue-50 cursor-pointer " onClick={()=> router.push(`/dashboard/Order/${order.id}`) }>
                                             <TableCell>
                                                 <Link href={`/dashboard/Order/${order.id}`}>#{order.id.slice(-6)}</Link>
                                             </TableCell>
