@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { server } from "@/lib/constant";
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function ForgotPassword() {
         setLoading(true);
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/resetPassword?email=${email}`,
+            redirectTo: `${server}/resetPassword?email=${email}`,
         });
 
         if (error) {

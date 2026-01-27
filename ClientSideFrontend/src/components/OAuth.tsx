@@ -1,13 +1,14 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabaseClient";
+import { server } from "@/lib/constant";
 
 export default function OAuth() {
     const handleGoogleAuth = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: `${window.location.origin}/`, // Works everywhere!
+                redirectTo: `${server}/`, // Works everywhere!
             },
         });
 
