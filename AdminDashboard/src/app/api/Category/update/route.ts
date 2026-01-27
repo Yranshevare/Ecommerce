@@ -20,7 +20,7 @@ export async function POST (req:NextRequest){
                 id: data.id
             },
             data: {
-              categoryName: data.formData.name,
+              name: data.formData.name,
               description: data.formData.description
             }
         })
