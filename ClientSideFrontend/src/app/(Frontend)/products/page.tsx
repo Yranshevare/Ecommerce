@@ -7,7 +7,7 @@ import ProductGrid from "@/components/ProductGrid";
 import Pagination from "@/components/Pagination";
 import { categories } from "@/data/products";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
