@@ -22,6 +22,7 @@ model Category{
     product Product[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    details String @default("")
 }
 
 model Product{

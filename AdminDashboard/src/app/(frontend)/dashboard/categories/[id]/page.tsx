@@ -9,6 +9,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useState, useEffect, useCallback } from "react";
 import AddProducts from "@/components/AddProducts";
 import React from "react";
+import TipTapEditor from "@/components/TipTapEditor";
 
 type Category = {
     id: string;
@@ -34,6 +35,7 @@ export default function CategoryDetailPage({ params }: ProductPageProps) {
     const [otherProducts, setOtherProducts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [specification, setSpecification] = useState("");
 
     const fetchData = async () => {
         try {
@@ -43,6 +45,7 @@ export default function CategoryDetailPage({ params }: ProductPageProps) {
             setCategory(res.data.data.category);
             setProductsInCategory(res.data.data.category.product);
             setOtherProducts(res.data.data.otherProducts);
+            setSpecification(res.data.data.category.details);
         } catch (error) {
             console.error("Error fetching category data:", error);
         } finally {
@@ -283,6 +286,9 @@ export default function CategoryDetailPage({ params }: ProductPageProps) {
                         </CardContent>
                     </Card>
                 </div>
+            </div>
+            <div>
+                <TipTapEditor content={specification} id={id} />
             </div>
         </div>
     );
