@@ -91,7 +91,7 @@ h5 {
 
             `}</style>
 
-            <div dangerouslySetInnerHTML={{ __html: details }}></div>
+            <div className="text-justify" dangerouslySetInnerHTML={{ __html: details }}></div>
         </>
     );
 }

@@ -179,7 +179,7 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                         </p>
                         <div className="w-full flex flex-col gap-3">
                             {Object.entries(product.specification).map(([key, value]) => (
-                                <div className="grid grid-cols-2 gap-3">
+                                <div key={key} className="grid grid-cols-2 gap-3">
                                     <span className="lg:text-xl font-medium text-stone-800">{key}</span>
                                     <span className="lg:text-xl text-stone-500">{value}</span>
                                 </div>
