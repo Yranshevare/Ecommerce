@@ -44,7 +44,7 @@ type recentProducts = {
     name: string;
     category: string;
     status: string;
-    price: string;
+    price: { key: string; value: string; discount: number | null }[];
     stock: number;
     image: string;
 };
@@ -163,7 +163,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className="flex items-center space-x-4">
                                         <div className="text-right">
-                                            <p className="font-medium text-gray-900">{product.price} Rs</p>
+                                            <p className="font-medium text-gray-900">{new Date(product.createdAt).toLocaleDateString()} Rs</p>
                                         </div>
 
                                         <DropdownMenu>

@@ -65,7 +65,7 @@ const Cart = () => {
                     {/* Cart Items */}
                     <div className="lg:col-span-2 space-y-4">
                         {items.map((item) => (
-                            <div key={`${item.product.id}`} className="bg-white rounded-xl p-4 md:p-6 shadow-sm flex flex-col sm:flex-row gap-4">
+                            <div key={`${item.product.id, item.product.price.key}`} className="bg-white rounded-xl p-4 md:p-6 shadow-sm flex flex-col sm:flex-row gap-4">
                                 {/* Product Image */}
                                 <Link href={`/product/${item.product.id}`} className="flex-shrink-0">
                                     <img
@@ -94,7 +94,11 @@ const Cart = () => {
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>
+
                                     </div>
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <span className="text-xs bg-[#F5F3EE] text-[#6B7B6E] px-2 py-1 rounded"> {item.product.price.key}</span>
+                                        </div>
 
                                     {/* <div className="flex items-center gap-2 mb-4">
                                         <span className="text-xs bg-[#F5F3EE] text-[#6B7B6E] px-2 py-1 rounded">Size: {item.selectedSize}</span>
@@ -122,9 +126,9 @@ const Cart = () => {
                                         {/* Price */}
                                         <div className="text-right">
                                             <p className="text-lg font-semibold text-[#2C3E2D]">
-                                                ${(parseInt(item.product.price) * item.quantity).toFixed(2)}
+                                                ${(parseInt(item.product.price.value) * item.quantity).toFixed(2)}
                                             </p>
-                                            {item.quantity > 1 && <p className="text-sm text-[#6B7B6E]">${item.product.price} each</p>}
+                                            {item.quantity > 1 && <p className="text-sm text-[#6B7B6E]">${item.product.price.value} each</p>}
                                         </div>
                                     </div>
                                 </div>

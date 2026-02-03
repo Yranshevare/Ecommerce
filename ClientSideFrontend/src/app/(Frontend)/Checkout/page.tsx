@@ -473,7 +473,7 @@ const Checkout = () => {
                                                 <p className="text-sm font-medium text-[#2C3E2D] line-clamp-1">{item.product.name}</p>
                                                 {/* <p className="text-xs text-[#6B7B6E]">Size: {item.selectedSize}</p> */}
                                                 <p className="text-sm font-medium text-[#2C3E2D] mt-1">
-                                                    ${(parseInt(item.product.price) * item.quantity).toFixed(2)}
+                                                    ${(parseInt(item.product.price.value) * item.quantity).toFixed(2)}
                                                 </p>
                                             </div>
                                         </div>

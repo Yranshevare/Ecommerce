@@ -20,7 +20,7 @@ type PaymentMethod = "COD" | "ONLINE";
 interface ProductItem {
     productId: string;
     quantity: number;
-    price: string;
+    price: { key: string; value: string; discount?: number };
     product: {
         name: string;
         images: string[];
@@ -177,6 +177,7 @@ export default function OrderDetailPage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Product </TableHead>
+                                <TableHead className="text-center">type </TableHead>
                                 <TableHead className="text-center">Qty</TableHead>
                                 <TableHead className="text-right">Price</TableHead>
                             </TableRow>
@@ -203,8 +204,9 @@ export default function OrderDetailPage() {
                                                     <p>{item.product.name}</p>
                                                 </div>
                                             </TableCell>
+                                            <TableCell className="text-center">{item.price.key ?? "-"}</TableCell>
                                             <TableCell className="text-center">{item.quantity ?? "-"}</TableCell>
-                                            <TableCell className="text-right">₹{item.price}</TableCell>
+                                            <TableCell className="text-right">₹{item.price.value}</TableCell>
                                         </TableRow>
                                     )
                                 )
@@ -214,6 +216,7 @@ export default function OrderDetailPage() {
                                 <TableCell  className="text-right flex ">
                                     <strong>Total:</strong>
                                 </TableCell>
+                                <TableCell  className="text-center "></TableCell>
                                 <TableCell  className="text-center "><b>{total}</b></TableCell>
                                 <TableCell  className="text-right  ">
                                     <b>₹{order.totalPrice}</b>

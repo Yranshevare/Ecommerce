@@ -11,6 +11,17 @@ import { Truck, Clock, XCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 
+type product = {
+    productId: string;
+    quantity: number;
+    price: { key: string; value: string; discount?: number };
+    product: {
+        name: string;
+        images: string[];
+        specification: { [key: string]: string };
+    };
+};
+
 type order = {
     id: string;
     status: "PENDING" | "ACCEPTED" | "REJECTED";
@@ -22,16 +33,7 @@ type order = {
     state: string;
     pin: string;
     phone: string;
-    products: {
-        productId: string;
-        quantity: number;
-        price: string;
-        product: {
-            name: string;
-            images: string[];
-            specification: { [key: string]: string };
-        };
-    }[];
+    products: product[];
 };
 
 const statusConfig = {
@@ -99,12 +101,12 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                 <div className="bg-white rounded-xl border p-6 space-y-4">
                     <h2 className="font-semibold text-lg">Items</h2>
 
-                    {order.products.map((item: any) => (
+                    {order.products.map((item: product) => (
                         <div key={item.productId} className="flex gap-4 border-b pb-4 last:border-none">
-                            <img src={item.product.images[0]} className="w-20 h-20 rounded-lg object-cover" alt={item.product.name} />
+                            <img onClick={()=> router.push(`/products/${item.productId}`)} src={item.product.images[0]} className="w-20 h-20 rounded-lg object-cover" alt={item.product.name} />
 
                             <div className="flex-1 ">
-                                <p className="font-medium">{item.product.name}</p>
+                                <p className="font-medium">{item.product.name} - {item.price.key}</p>
                                 <p className="text-sm text-stone-500">Quantity: {item.quantity}</p>
                                 <p className="text-sm text-stone-500">
                                     {Object.entries(item.product.specification)
@@ -113,7 +115,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                                 </p>
                             </div>
 
-                            <p className="font-medium">₹{(item.quantity * Number(item.price)).toFixed(2)}</p>
+                            <p className="font-medium">₹{(item.quantity * Number(item.price.value)).toFixed(2)}</p>
                         </div>
                     ))}
                 </div>

@@ -1,6 +1,14 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product } from '@/data/products';
+export interface Product {
+    id: string;
+    name: string;
+    price: {key:string, value:string, discount?:number}
+    images: string[];
+    category: string;
+    description: string;
+    specification: { [key: string]: string };
+}
 
 export interface CartItem {
   product: Product;
@@ -25,7 +33,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const addToCart = (product: Product, quantity: number) => {
     setItems(prev => {
       const existingIndex = prev.findIndex(
-        item => item.product.id === product.id 
+        item => item.product.id === product.id && item.product.price.key === product.price.key
       );
       
       if (existingIndex > -1) {
@@ -33,7 +41,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         updated[existingIndex].quantity += quantity;
         return updated;
       }
-      
       return [...prev, { product, quantity }];
     });
   };
@@ -70,7 +77,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   
   const subtotal = items.reduce(
-    (sum, item) => sum + parseInt(item.product.price) * item.quantity,
+    (sum, item) => sum + parseInt(item.product.price.value) * item.quantity,
     0
   );
 

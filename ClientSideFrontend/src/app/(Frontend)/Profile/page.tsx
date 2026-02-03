@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
-import {  Order } from "@/data/orders";
+// import {  Order } from "@/data/orders";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -17,6 +17,37 @@ import axios from "axios";
 import { supabase } from "@/lib/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 import { set } from "react-hook-form";
+
+export interface OrderItem {
+    productId: string;
+    price: { key: string; value: string; discount?: number };
+    quantity: number;
+    productData: {
+        images: string[];
+        specification: { [key: string]: string };
+        name: string;
+    };
+}
+
+export interface Order {
+    id: string;
+    orderNumber: string;
+    date: string;
+    status: "PENDING" | "ACCEPTED" | "REJECTED";
+    products: OrderItem[];
+    subtotal: number;
+    shipping: number;
+    totalPrice: number;
+    shippingAddress: {
+        name: string;
+        street: string;
+        city: string;
+        state: string;
+        zip: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+}
 
 const OrderCard = ({ order }: { order: Order }) => {
     const statusConfig = {
@@ -34,10 +65,7 @@ const OrderCard = ({ order }: { order: Order }) => {
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b">
                 <div>
                     <p className="font-medium">Order Id: {order.id}</p>
-                    <p className="text-sm text-stone-500">
-                        Placed on{" "}
-                        {new Date(order.createdAt).toLocaleDateString()}
-                    </p>
+                    <p className="text-sm text-stone-500">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
                 </div>
                 <Badge className={`${statusConfig[order.status].color} flex gap-1`}>
                     <StatusIcon className="h-3 w-3" />
@@ -47,21 +75,19 @@ const OrderCard = ({ order }: { order: Order }) => {
 
             {/* Products */}
             <div className="space-y-4 mb-4">
-                {order.products.map((item:any) => {
+                {order.products.map((item: OrderItem) => {
                     const { specification } = item.productData;
 
                     return (
-                        <div onClick={()=> router.push(`/products/${item.productId}`) } key={item.productId} className="flex  cursor-pointer gap-4">
-                            <img
-                                src={item.productData.images[0]}
-                                className="w-20 h-20 object-cover rounded-lg"
-                                alt="product"
-                            />
+                        <div onClick={() => router.push(`/products/${item.productId}`)} key={item.productId} className="flex  cursor-pointer gap-4">
+                            <img src={item.productData.images[0]} className="w-20 h-20 object-cover rounded-lg" alt="product" />
 
                             <div className="flex-1">
-                                <p className="font-medium text-stone-800">
-                                    {item.productData.name}
-                                </p>
+                                <div className="flex">
+                                    <p className="font-medium text-stone-800">{item.productData.name} </p>
+                                    <span>-</span>
+                                    <p>{item.price.key}</p>
+                                </div>
 
                                 <p className="text-sm text-stone-500">
                                     {Object.entries(specification)
@@ -69,14 +95,10 @@ const OrderCard = ({ order }: { order: Order }) => {
                                         .join(" • ")}
                                 </p>
 
-                                <p className="text-sm text-stone-500">
-                                    Qty: {item.quantity}
-                                </p>
+                                <p className="text-sm text-stone-500">Qty: {item.quantity}</p>
                             </div>
 
-                            <p className="font-medium">
-                                ₹{item.price}
-                            </p>
+                            <p className="font-medium">₹{item.price.value}</p>
                         </div>
                     );
                 })}
@@ -86,18 +108,17 @@ const OrderCard = ({ order }: { order: Order }) => {
             <div className="flex justify-between pt-4 border-t">
                 <div>
                     <p className="text-sm text-stone-500">Total</p>
-                    <p className="text-lg font-semibold">
-                        ₹{order.totalPrice}
-                    </p>
+                    <p className="text-lg font-semibold">₹{order.totalPrice}</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button onClick={()=>router.push(`orders/${order.id}`)} variant="outline" size="sm">View Details</Button>
+                    <Button onClick={() => router.push(`orders/${order.id}`)} variant="outline" size="sm">
+                        View Details
+                    </Button>
                 </div>
             </div>
         </div>
     );
 };
-
 
 const Profile = () => {
     const { user, logout, updateProfile, isAuthenticated } = useAuth();
@@ -115,7 +136,7 @@ const Profile = () => {
         phone: user?.phone || "",
     });
 
-    const {data, isLoading, isError} = useQuery({
+    const { data, isLoading, isError } = useQuery({
         queryKey: ["profile"],
         queryFn: async () => {
             setLoading(true);
@@ -123,13 +144,13 @@ const Profile = () => {
                 data: { session },
             } = await supabase.auth.getSession();
             const token = session?.access_token;
-            console.log("fetching")
+            console.log("fetching");
             const res = await axios.get(`/api/Order/getAll?token=${token}`);
             setOrders(res.data.data);
             setLoading(false);
             return res.data.data;
         },
-    })
+    });
 
     useEffect(() => {
         if (user) {
@@ -140,7 +161,6 @@ const Profile = () => {
             });
         }
     }, [user]);
-
 
     if (isLoading || loading) {
         return (
@@ -172,7 +192,7 @@ const Profile = () => {
         );
     }
 
-    if(isError) {
+    if (isError) {
         return (
             <div className="min-h-screen flex flex-col bg-stone-50">
                 <Header />

@@ -10,6 +10,7 @@ generator client {
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
+
 datasource db {
   provider = "mongodb"       // add mongodb as provider for connecting with mongodb
   url      = env("DATABASE_URL")
@@ -25,6 +26,11 @@ model Category{
     details String @default("")
 }
 
+type Price{
+    key String
+    value String
+    discount Int?
+}
 model Product{
     id String @id @default(auto()) @map("_id") @db.ObjectId
     name String
@@ -32,8 +38,7 @@ model Product{
     cat Category? @relation(fields: [category], references: [name])
     category String? 
     images String[]
-    price String
-    discount String?
+    price Price[]
     specification Json
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt 
@@ -54,7 +59,7 @@ enum paymentMethod {
 type ProductItem {
   productId String @db.ObjectId  // reference to Product's _id
   quantity  Int?
-  price String
+  price Price
 }
 
 model Order{

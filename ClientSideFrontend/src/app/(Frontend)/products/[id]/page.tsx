@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { ShoppingCart, Heart, Truck, Shield, RotateCcw, Minus, Plus, ChevronLeft, ChevronRight, Loader, MoveLeft, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Product, products } from "@/data/products";
+import { Product } from "@/data/products";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -19,6 +19,11 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
     const [details, setDetails] = useState<string>("");
     const [showFullDescription, setShowFullDescription] = useState(false);
+    const [selectedPrice, setSelectedPrice] = useState<{ key: string; value: string; discount?: number | undefined }>({
+        key: "",
+        value: "",
+        discount: undefined,
+    });
 
     const { addToCart } = useCart();
     const { toast } = useToast();
@@ -29,6 +34,7 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
             const res = await axios.get(`/api/Product/getOne?id=${id}`);
             console.log(res.data.data);
             setProduct(res.data.data.products);
+            setSelectedPrice(res.data.data.products.price[0]);
             setLoading(true);
             setRelatedProducts(res.data.data.category.product.filter((p: Product) => p.id !== id));
             setDetails(res.data.data.category.details);
@@ -79,7 +85,11 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     };
 
     const handleAddToCart = () => {
-        addToCart(product, quantity);
+        const selectedProduct = {
+            ...product,
+            price: selectedPrice,
+        };
+        addToCart(selectedProduct, quantity);
         toast({
             description: `${quantity} x ${product.name}  added to your cart.`,
         });
@@ -92,7 +102,7 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
             <main className="flex flex-col justify-center items-center mx-auto lg:px-20 px-5 py-8 ">
                 <div className="w-full justify-start">
                     <Link href={"/products"} className="text-gray-500 hover:text-gray-800 font-medium duration-300 flex gap-2 items-center">
-                        <ArrowLeft className="translate-y-0.4 w-5"/>
+                        <ArrowLeft className="translate-y-0.4 w-5" />
                         Go back
                     </Link>
                 </div>
@@ -143,17 +153,16 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                             <span className="text-xs font-medium text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">{product.category}</span>
                         </div>
 
-                        {/* Price */}
                         <div className="flex items-center gap-2 mb-4">
-                            <span className="text-xl font-semibold text-stone-800">₹{product.price}</span>
+                            <span className="text-xl font-semibold text-stone-800">₹{selectedPrice.value}</span>
 
-                            {Number(product.discount) > 0 && (
+                            {Number(selectedPrice.discount) > 0 && (
                                 <>
                                     <span className="text-sm text-stone-500 line-through">
-                                        ₹{Math.round(Number(product.price) / (1 - Number(product.discount) / 100))}
+                                        ₹{Math.round(Number(selectedPrice.value) / (1 - Number(selectedPrice.discount) / 100))}
                                     </span>
 
-                                    <span className="text-xs font-medium text-red-500">{product.discount}% OFF</span>
+                                    <span className="text-xs font-medium text-red-500">{selectedPrice.discount}% OFF</span>
                                 </>
                             )}
                         </div>
@@ -163,7 +172,10 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                             {showFullDescription ? (
                                 <>
                                     <p>{product.description}</p>
-                                    <button className="text-black font-medium text-xs cursor-pointer" onClick={() => setShowFullDescription((prev) => !prev)}>
+                                    <button
+                                        className="text-black font-medium text-xs cursor-pointer"
+                                        onClick={() => setShowFullDescription((prev) => !prev)}
+                                    >
                                         {" "}
                                         Read Less
                                     </button>
@@ -171,7 +183,10 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                             ) : (
                                 <>
                                     <p>{product.description.slice(0, 100)}</p>
-                                    <button className="text-black font-medium text-xs cursor-pointer" onClick={() => setShowFullDescription((prev) => !prev)}>
+                                    <button
+                                        className="text-black font-medium text-xs cursor-pointer"
+                                        onClick={() => setShowFullDescription((prev) => !prev)}
+                                    >
                                         {product.description.length > 100 ? "...Read More" : "Read Less"}
                                     </button>
                                 </>
@@ -186,6 +201,26 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                             ))}
                         </div>
 
+                        <div className="mt-10">
+                            <div className="flex flex-col space-y-3">
+                                <label className="text-sm font-medium text-stone-800">Available In</label>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.price.map((p) => (
+                                        <button
+                                            key={p.key}
+                                            onClick={() => setSelectedPrice(p)}
+                                            className={`px-6 py-3 rounded-xl border-2 font-medium transition-all ${
+                                                 selectedPrice.key === p.key
+                                                    ? "border-emerald-700 bg-emerald-50 text-emerald-700"
+                                                    : "border-stone-200 text-stone-600 hover:border-stone-300"
+                                            }`}
+                                        >
+                                            {p.key}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                         {/* Quantity & Add to Cart */}
                         <div className="flex flex-col sm:flex-row gap-4">
                             {/* Quantity Selector */}
@@ -270,11 +305,11 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
                                         <h3 className="sm:text-base text-[15px]! font-medium text-stone-800 mt-2 mb-2 line-clamp-2">{item.name}</h3>
 
-                                        <div className="flex items-center gap-2">
+                                        {/* <div className="flex items-center gap-2">
                                             <span className="sm:text-lg text-xs font-semibold text-stone-800">₹{item.price}</span>
 
                                             {item.discount && <span className="text-xs font-medium text-red-500">{item.discount}% OFF</span>}
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </Link>
                             ))}

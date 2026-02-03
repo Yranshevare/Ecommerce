@@ -78,15 +78,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
                     {/* Price */}
                     <div className="sm:flex  items-center gap-2 sm:mb-4">
-                        <span className="sm:text-lg text-sm font-semibold text-stone-800">₹{product.price}</span>
+                        <span className="sm:text-lg text-sm font-semibold text-stone-800">₹{product.price[0].value}</span>
 
-                        {Number(product.discount) > 0 && (
+                        {Number(product.price[0].discount) > 0 && (
                             <div className="sm:flex-row flex flex-col sm:items-center sm:gap-2">
                                 <span className="sm:text-xs text-[10px] text-stone-500 line-through">
-                                    ₹{Math.round(Number(product.price) / (1 - Number(product.discount) / 100))}
+                                    ₹{Math.round(Number(product.price) / (1 - Number(product.price[0].discount) / 100))}
                                 </span>
 
-                                <span className="text-xs font-medium text-red-500">{product.discount}% OFF</span>
+                                <span className="text-xs font-medium text-red-500">{product.price[0].discount}% OFF</span>
                             </div>
                         )}
                     </div>

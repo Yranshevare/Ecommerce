@@ -11,7 +11,7 @@ export async function GET(req:NextRequest){
                 images:true,
                 category:true,
                 description:true,
-                price:true,
+                createdAt:true
             }
         })
 

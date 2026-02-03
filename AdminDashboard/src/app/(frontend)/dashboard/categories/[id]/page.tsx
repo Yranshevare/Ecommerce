@@ -219,7 +219,7 @@ export default function CategoryDetailPage({ params }: ProductPageProps) {
                                             </div>
                                             <div className="flex items-center space-x-4">
                                                 <div className="text-right">
-                                                    <p className="font-medium text-gray-900">Rs {product.price}</p>
+                                                    <p className="font-medium text-gray-900">Rs {product.price[0].value}</p>
                                                 </div>
                                                 <Link href={`/dashboard/products/${product.id}`}>
                                                     <Button variant="ghost" size="sm">
