@@ -21,10 +21,11 @@ export async function POST(req: NextRequest) {
         const name = formData.get("name") as string;
         const category = formData.get("category") as string;
         const description = formData.get("description") as string;
-        const price = formData.get("price") as string;
-        const discount = formData.get("discount") as string | null;
+        const priceData = formData.get("price") ;
         const specification: any = formData.get("specification");
         const imageFiles = formData.getAll("images") as File[];
+
+        const price : {key:string, value:string, discount?:number}[] = JSON.parse(priceData as string);
 
         const img: string[] = [];
 
@@ -42,7 +43,6 @@ export async function POST(req: NextRequest) {
         //   category: category || null,
         //   description: description,
         //   price: price,
-        //   discount: discount || undefined,
         //   specification: JSON.parse(specification),
         // }
 
@@ -54,7 +54,6 @@ export async function POST(req: NextRequest) {
                 category: category || null,
                 description,
                 price,
-                discount: discount || undefined,
                 specification: JSON.parse(specification),
             },
         });

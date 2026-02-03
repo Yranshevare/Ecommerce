@@ -141,9 +141,9 @@ const Products = () => {
     const breadcrumbItems = [{ label: "Products", href: "/products" }, { label: pageTitle }];
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <ProductsLoading />;
     }
-
+    
     return (
         <div className="min-h-screen bg-stone-50">
             <Header />
@@ -240,3 +240,51 @@ const Products = () => {
 };
 
 export default Products;
+
+const ProductsLoading = () => {
+    return (
+        <div className="min-h-screen bg-stone-50">
+            {/* Header placeholder */}
+            <div className="h-20 bg-white shadow-sm" />
+
+            <main className="py-8 lg:px-20 px-5 animate-pulse">
+                {/* Breadcrumb */}
+                <div className="h-4 w-40 bg-stone-200 rounded mb-6" />
+
+                {/* Page header */}
+                <div className="mb-8">
+                    <div className="h-10 w-64 bg-stone-200 rounded mb-3" />
+                    <div className="h-4 w-96 bg-stone-200 rounded" />
+                </div>
+
+                {/* Toolbar */}
+                <div className="flex justify-between mb-8 pb-6 border-b border-stone-200">
+                    <div className="h-10 w-32 bg-stone-200 rounded" />
+                    <div className="flex gap-4">
+                        <div className="h-10 w-40 bg-stone-200 rounded" />
+                        <div className="h-10 w-40 bg-stone-200 rounded" />
+                    </div>
+                </div>
+
+                {/* Product Grid Skeleton */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="bg-white rounded-xl shadow-sm p-4">
+                            {/* Image */}
+                            <div className="h-48 bg-stone-200 rounded-lg mb-4" />
+
+                            {/* Title */}
+                            <div className="h-4 bg-stone-200 rounded w-3/4 mb-2" />
+
+                            {/* Price */}
+                            <div className="h-4 bg-stone-200 rounded w-1/2" />
+                        </div>
+                    ))}
+                </div>
+            </main>
+
+            {/* Footer placeholder */}
+            <div className="h-40 bg-white mt-12" />
+        </div>
+    );
+};

@@ -21,7 +21,8 @@ type Product = {
     images: string[];
     category: string;
     description: string;
-    price: string;
+    price: {key:string, value:string, discount?:number}[];
+    createdAt: string;
 };
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -116,7 +117,7 @@ export default function ProductsPage() {
                                 <TableRow>
                                     <TableHead>Product</TableHead>
                                     <TableHead>Category</TableHead>
-                                    <TableHead>Price</TableHead>
+                                    <TableHead>createdAt</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -140,7 +141,7 @@ export default function ProductsPage() {
                                             </div>
                                         </TableCell>
                                         <TableCell>{product.category}</TableCell>
-                                        <TableCell>{product.price} RS</TableCell>
+                                        <TableCell>{new Date(product.createdAt).toLocaleDateString()} </TableCell>
                                         <TableCell className="text-right">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>

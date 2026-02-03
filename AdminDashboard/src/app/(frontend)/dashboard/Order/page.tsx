@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 interface ProductItem {
     productId: string;
     quantity?: number;
-    price: string;
+    price: { key: string; value: string; discount?: number };
 }
 
 type OrderStatus = "PENDING" | "ACCEPTED" | "REJECTED";
@@ -58,9 +58,10 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
         try {
             const res = await axios.get("/api/order/get");
+            console.log(res.data);
             setOrders(res.data.data);
         } catch (err) {
-            console.error("Failed to fetch orders");
+            console.error("Failed to fetch orders", err);
         } finally {
             setLoading(false);
         }

@@ -3,7 +3,7 @@
 
 export interface OrderItem {
   productId: string;
-  price:string,
+  price:{key:string, value:string, discount?:number},
   quantity: number;
   productData:{
     images:string[],

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Loader2, Plus, Upload, X } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, Trash, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
@@ -22,9 +22,9 @@ export default function NewProductPage() {
         name: "",
         description: "",
         category: "",
-        price: "",
-        discount: "",
     });
+
+    const [price, setPrice] = useState<{ key: string; value: string; discount: number | null }[]>([{ key: "", value: "", discount: null }]);
     const [images, setImages] = useState<Array<{ file: File; preview: string; name: string; size: number }>>([]);
     const [specifications, setSpecifications] = useState([{ key: "", value: "" }]);
     const [Saving, setSaving] = useState(false);
@@ -93,12 +93,34 @@ export default function NewProductPage() {
             }
         });
 
+        setPrice((prev) => prev.filter((p) => !p.key && !p.value));
+
+        price.forEach((p) => {
+            if (!p.key) {
+                alert("Please provide a type for each price entry.");
+                setSaving(false);
+                return;
+            }
+            if (!p.value) {
+                alert("Please provide a price for each price entry.");
+                setSaving(false);
+                return;
+            }
+            if (isNaN(Number(p.value))) {
+                alert("Please provide a valid number for price.");
+                setSaving(false);
+                return;
+            }
+            if (p.discount === 0) {
+                p.discount = null;
+            }
+        });
+
         const formDataToSend = new FormData();
         formDataToSend.append("name", formData.name);
         formDataToSend.append("category", formData.category);
         formDataToSend.append("description", formData.description);
-        formDataToSend.append("price", formData.price);
-        formDataToSend.append("discount", formData.discount);
+        formDataToSend.append("price", JSON.stringify(price));
         formDataToSend.append("otherSpecification", JSON.stringify(spec));
         formDataToSend.append("specification", JSON.stringify(spec));
 
@@ -237,29 +259,86 @@ export default function NewProductPage() {
                                 <CardTitle>Pricing & Discount</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="price">Price (RS) *</Label>
-                                        <Input
-                                            id="price"
-                                            type="number"
-                                            step="0.01"
-                                            value={formData.price}
-                                            onChange={(e) => handleInputChange("price", e.target.value)}
-                                            placeholder="0.00"
-                                            required
-                                        />
+                                {price.map((priceItem, index) => (
+                                    <div key={index} className="flex items-center  gap-2">
+                                        <div className="grid gap-4 sm:grid-cols-3">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="price">Type</Label>
+                                                <Input
+                                                    id="price"
+                                                    type="string"
+                                                    value={priceItem.key}
+                                                    onChange={(e) =>
+                                                        setPrice((prev) => {
+                                                            const newPrice = [...prev];
+                                                            newPrice[index].key = e.target.value;
+                                                            return newPrice;
+                                                        })
+                                                    }
+                                                    placeholder="e.g., red, blue, etc"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="price">Price (RS) *</Label>
+                                                <Input
+                                                    id="price"
+                                                    type="number"
+                                                    step="0.01"
+                                                    value={priceItem.value}
+                                                    onChange={(e) =>
+                                                        setPrice((prev) => {
+                                                            const newPrice = [...prev];
+                                                            newPrice[index].value = e.target.value;
+                                                            return newPrice;
+                                                        })
+                                                    }
+                                                    placeholder="0.00"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="minStock">Discount %</Label>
+                                                <Input
+                                                    id="discount"
+                                                    type="number"
+                                                    value={priceItem.discount || ""}
+                                                    onChange={(e) =>
+                                                        setPrice((prev) => {
+                                                            const newPrice = [...prev];
+                                                            newPrice[index].discount = parseInt(e.target.value, 10);
+                                                            return newPrice;
+                                                        })
+                                                    }
+                                                    placeholder="0"
+                                                />
+                                            </div>
+                                        </div>
+                                        {price.length > 1 && (
+                                            <button
+                                                onClick={() =>
+                                                    setPrice((prev) => {
+                                                        const newPrice = [...prev];
+                                                        newPrice.splice(index, 1);
+                                                        return newPrice;
+                                                    })
+                                                }
+                                                className="flex items-center text-rose-500 hover:text-red-700 duration-100 cursor-pointer hover:scale-105 justify-center translate-y-2"
+                                            >
+                                                <Trash size={15} />
+                                            </button>
+                                        )}
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="minStock">Discount %</Label>
-                                        <Input
-                                            id="discount"
-                                            type="number"
-                                            value={formData.discount}
-                                            onChange={(e) => handleInputChange("discount", e.target.value)}
-                                            placeholder="0"
-                                        />
-                                    </div>
+                                ))}
+                                <div className="w-1/4">
+                                    <Button
+                                        onClick={() => setPrice((prev) => [...prev, { key: "", value: "", discount: 0 }])}
+                                        type="button"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 flex justify-center items-center"
+                                    >
+                                        <Plus />
+                                        <span>Add</span>
+                                    </Button>
                                 </div>
                             </CardContent>
                         </Card>

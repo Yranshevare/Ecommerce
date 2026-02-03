@@ -8,16 +8,16 @@ import { ArrowLeft, Edit, Trash2, DollarSign, Calendar, Eye, Loader2 } from "luc
 import Link from "next/link";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { Table, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 type productType = {
     id: string;
     name: string;
     description: string;
     category: string;
-    price: number;
+    price: { key: string; value: string; discount?: number }[];
     createdAt: string;
     updatedAt: string;
-    discount: string;
     images: string[];
     specification: {
         [key: string]: string;
@@ -202,22 +202,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-2">
-                                    <DollarSign className="w-4 h-4 text-gray-400" />
-                                    <span className="text-sm font-medium text-gray-600">Price</span>
-                                </div>
-                                <span className="text-lg font-bold text-gray-900">{product.price} Rs</span>
-                            </div>
-                            <Separator />
-                            <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-600">Category</span>
                                 <span className="text-sm text-gray-900">{product.category}</span>
                             </div>
-                            <Separator />
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-600">Discount</span>
-                                <span className="text-sm text-gray-900">{product.discount || "0"} %</span>
-                            </div>
+
                             <Separator />
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-2">
@@ -237,6 +225,31 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </CardContent>
                     </Card>
 
+                    {/*pricing and discount  */}
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Pricing Details</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Price</TableHead>
+                                        <TableHead>Discount</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                {product.price.map((priceObj) => (
+                                    <TableRow key={priceObj.key} className="">
+                                        <TableCell className="text-sm font-medium text-gray-600">{priceObj.key}</TableCell>
+                                        <TableCell className="text-sm text-gray-900">{priceObj.value} Rs</TableCell>
+                                        <TableCell className="text-sm text-gray-900">{priceObj.discount || 0} %</TableCell>
+                                    </TableRow>
+                                ))}
+                            </Table>
+                        </CardContent>
+                    </Card>
                     <Card>
                         <CardHeader>
                             <CardTitle>Specifications</CardTitle>

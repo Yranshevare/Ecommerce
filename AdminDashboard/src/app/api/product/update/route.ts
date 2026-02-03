@@ -27,12 +27,11 @@ export async function POST(req: NextRequest) {
         const productName = formData.get("productName") as string;
         const categoryName = formData.get("category") as string;
         const description = formData.get("description") as string;
-        const price = formData.get("price") as string;
-        const material = formData.get("material") as string | null;
-        const size = formData.get("size") as string | null;
-        const weight = formData.get("weight") as string | null;
+        const priceData = formData.get("price") as string;
         const discount = formData.get("discount") as string | null;
         const specification: any = formData.get("specification");
+
+        const price: { key: string; value: string; discount?: number }[] = JSON.parse(priceData);
 
         // --- Primary image ---
         let pImage: string | null = null;
@@ -97,7 +96,6 @@ export async function POST(req: NextRequest) {
                 category: categoryName,
                 description,
                 price,
-                discount: discount || undefined,
                 specification: JSON.parse(specification),
             },
         });

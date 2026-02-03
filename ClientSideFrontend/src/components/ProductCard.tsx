@@ -65,36 +65,36 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex flex-col justify-between items-start gap-2 ">
+                <div className="sm:p-5 p-1 flex flex-col justify-between items-start gap-2 ">
                     <div className="min-h-[3rem] mb-2 flex flex-col gap-2">
                         <h3 className="text-base font-medium text-stone-800  line-clamp-2 ">{product.name}</h3>
                         <div className="flex items-center gap-2">
                             <span className="text-xs font-medium text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">{product.category}</span>
                         </div>
                     </div>
-                    <p>
-                        {product.description.slice(0, 100)} {product.description.length > 100 && "..."}
+                    <p className="sm:text-lg text-xs ">
+                        {product.description.slice(0, 80)} {product.description.length > 80 && "..."}
                     </p>
 
                     {/* Price */}
-                    <div className="flex items-center gap-2 mb-4">
-                        <span className="text-lg font-semibold text-stone-800">₹{product.price}</span>
+                    <div className="sm:flex  items-center gap-2 sm:mb-4">
+                        <span className="sm:text-lg text-sm font-semibold text-stone-800">₹{product.price[0].value}</span>
 
-                        {Number(product.discount) > 0 && (
-                            <>
-                                <span className="text-sm text-stone-500 line-through">
-                                    ₹{Math.round(Number(product.price) / (1 - Number(product.discount) / 100))}
+                        {Number(product.price[0].discount) > 0 && (
+                            <div className="sm:flex-row flex flex-col sm:items-center sm:gap-2">
+                                <span className="sm:text-xs text-[10px] text-stone-500 line-through">
+                                    ₹{Math.round(Number(product.price) / (1 - Number(product.price[0].discount) / 100))}
                                 </span>
 
-                                <span className="text-xs font-medium text-red-500">{product.discount}% OFF</span>
-                            </>
+                                <span className="text-xs font-medium text-red-500">{product.price[0].discount}% OFF</span>
+                            </div>
                         )}
                     </div>
 
                     {/* Add to Cart */}
                 </div>
             </div>
-            <div className="p-5">
+            <div className="sm:p-5 p-2">
                 <Button
                     variant="product"
                     className="w-full"
@@ -104,8 +104,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         handleAddToCart();
                     }}
                 >
-                    <ShoppingCart className="h-4 w-4" />
-                    Add to Cart
+                    <ShoppingCart className="sm:h-4 sm:w-4 h-2 w-2" />
+                    <span className="text-[10px]">
+                        Add to Cart
+                    </span>
                 </Button>
             </div>
         </div>
