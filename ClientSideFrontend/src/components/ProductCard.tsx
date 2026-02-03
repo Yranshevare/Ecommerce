@@ -18,7 +18,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
     const router = useRouter();
 
     const handleAddToCart = () => {
-        addToCart(product, 1);
+        const selectedProduct = { ...product, price: product.price[0] };
+        addToCart(selectedProduct, 1);
         toast({
             title: "Added to cart",
             description: `${1} x ${product.name} added to your cart.`,
