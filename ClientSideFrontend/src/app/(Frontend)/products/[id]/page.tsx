@@ -285,7 +285,7 @@ const ProductDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                             {relatedProducts.map((item) => (
                                 <Link
                                     key={item.id}
-                                    href={`/product/${item.id}`}
+                                    href={`/products/${item.id}`}
                                     className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
                                 >
                                     {/* Image */}

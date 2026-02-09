@@ -18,7 +18,7 @@ const Header = () => {
             <div className="flex h-16 items-center justify-between lg:px-20 px-5">
                 {/* Logo */}
                 <Link href="/" className="font-serif text-2xl font-semibold text-stone-800">
-                    Nestora
+                    <img src="/logo3.png" alt="" className="h-15"/>
                 </Link>
 
                 {/* Desktop Nav */}
@@ -47,19 +47,19 @@ const Header = () => {
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                                <DropdownMenuItem asChild>
+                            <DropdownMenuContent align="end" className="w-48 bg-white">
+                                <DropdownMenuItem asChild className="hover:bg-gray-200 cursor-pointer duration-150">
                                     <Link href="/Profile" className="flex gap-2">
                                         <User className="h-4 w-4" /> Profile
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
+                                <DropdownMenuItem asChild className="hover:bg-gray-200 cursor-pointer duration-150">
                                     <Link href="/Profile" className="flex gap-2">
                                         <Package className="h-4 w-4" /> Orders
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={logout} className="text-red-600">
+                                <DropdownMenuItem onClick={logout} className="text-red-600 hover:bg-red-200 cursor-pointer duration-150">
                                     <LogOut className="h-4 w-4" /> Logout
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

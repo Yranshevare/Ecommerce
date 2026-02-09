@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 // import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 
 const PRODUCTS_PER_PAGE = 8;
 
@@ -31,10 +32,10 @@ const Products = () => {
     const [sortBy, setSortBy] = useState<SortOption>("popular");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const categoryInfo = category ? categories.find((c) => c.slug === category) : null;
+    // const categoryInfo = category ? categories.find((c) => c.slug === category) : null;
 
-    const pageTitle = categoryInfo?.label || "All Products";
-    const pageDescription = categoryInfo?.description || "Explore our complete collection of premium home textiles";
+    const pageTitle = category || "All Products";
+    // const pageDescription = categoryInfo?.description || "Explore our complete collection of premium home textiles";
 
     const { data, isLoading } = useQuery({
         queryKey: ["products", category],
@@ -143,7 +144,7 @@ const Products = () => {
     if (isLoading) {
         return <ProductsLoading />;
     }
-    
+
     return (
         <div className="min-h-screen bg-stone-50">
             <Header />
@@ -160,37 +161,38 @@ const Products = () => {
                     </div>
 
                     {/* Toolbar */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-stone-200">
-                        <div className="flex items-center gap-4">
-                            {/* Mobile Filters */}
-                            {/* <ProductFilters
-                                filters={filters}
-                                onFiltersChange={handleFiltersChange}
-                                onReset={handleResetFilters}
-                                activeFiltersCount={activeFiltersCount}
-                            />
-                            <p className="text-sm text-stone-500">
-                                {filteredProducts.length} product
-                                {filteredProducts.length !== 1 ? "s" : ""}
-                            </p> */}
-                        </div>
-
-                        <div className="flex gap-4 flex-wrap">
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm text-stone-500 hidden sm:block">Sort by:</span>
-                                <Select value={sortBy} onValueChange={handleSortChange}>
-                                    <SelectTrigger className="w-[160px]">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-gray-50">
-                                        <SelectItem value="popular">Popular</SelectItem>
-                                        <SelectItem value="newest">Newest</SelectItem>
-                                        <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                                        <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] flex-wrap gap-4 mb-8 pb-6 border-b border-stone-200">
+                        <div className=" overflow-auto flex items-center gap-3">
                             {data?.categoryData && (
+                                <div className="flex  w-full gap-3">
+                                    {data.categoryData.map((cat: { name: string }, index: number) => (
+                                        <Button
+                                            key={index}
+                                            variant={cat.name === category ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => handleCategoryChange(cat.name)}
+                                        >
+                                            {cat.name}
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center md:justify-end gap-3">
+                            <span className="text-sm text-stone-500 hidden sm:block">Sort by:</span>
+                            <Select value={sortBy} onValueChange={handleSortChange}>
+                                <SelectTrigger className="w-[160px]">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="bg-gray-50">
+                                    <SelectItem value="popular">Popular</SelectItem>
+                                    <SelectItem value="newest">Newest</SelectItem>
+                                    <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                                    <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        {/* {data?.categoryData && (
                                 <div className="flex items-center gap-3">
                                     <span className="text-sm text-stone-500 hidden sm:block">Category</span>
                                     <Select value={category ? category : "All Products"} onValueChange={handleCategoryChange}>
@@ -206,8 +208,7 @@ const Products = () => {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                            )}
-                        </div>
+                            )} */}
                     </div>
 
                     {/* Main Content */}
