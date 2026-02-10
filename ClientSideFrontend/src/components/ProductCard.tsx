@@ -84,7 +84,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         {Number(product.price[0].discount) > 0 && (
                             <div className="sm:flex-row flex flex-col sm:items-center sm:gap-2">
                                 <span className="sm:text-xs text-[10px] text-stone-500 line-through">
-                                    ₹{Math.round(Number(product.price) / (1 - Number(product.price[0].discount) / 100))}
+                                    ₹{Math.round(Number(product.price[0].value) / (1 - Number(product.price[0].discount) / 100))}
                                 </span>
 
                                 <span className="text-xs font-medium text-red-500">{product.price[0].discount}% OFF</span>
