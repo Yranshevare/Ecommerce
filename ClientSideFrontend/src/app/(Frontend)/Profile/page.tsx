@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { User, Package, MapPin, Settings, LogOut, ChevronRight, Truck, CheckCircle, Clock, SplinePointer, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,8 @@ import axios from "axios";
 import { supabase } from "@/lib/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 import { set } from "react-hook-form";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@radix-ui/react-checkbox";
 
 export interface OrderItem {
     productId: string;
@@ -47,6 +49,194 @@ export interface Order {
     };
     createdAt: string;
     updatedAt: string;
+}
+
+function Address({ id }: { id: string }) {
+    const [data, setData] = useState<{ address: string; street: string; city: string; state: string; apartment: string; zip: string } | null>({
+        address: "",
+        street: "",
+        city: "",
+        state: "",
+        apartment: "",
+        zip: "",
+    });
+    const [isEditable, setIsEditable] = useState<boolean>(false);
+
+    useEffect(() => {
+        console.log("id", id)
+        const address = JSON.parse(localStorage.getItem(`shippingAddress_${id}`) || "{}");
+        console.log("address",address);
+        if (Object.keys(address).length !== 0) {
+            if (address.userId && address.userId !== id) {
+                setData(null);
+                return;
+            }
+            setData({
+                address: address.address || "",
+                street: address.street || "",
+                city: address.city || "",
+                state: address.state || "",
+                apartment: address.apartment || "",
+                zip: address.zipCode || "",
+            });
+        } else {
+            setData(null);
+        }
+    }, []);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setData((prev) => {
+            if (!prev) return prev; // guard for TS
+            return {
+                ...prev,
+                [name]: value,
+            };
+        });
+    };
+
+    function handleAddAddress() {
+        setData({
+            address: "",
+            street: "",
+            city: "",
+            state: "",
+            apartment: "",
+            zip: "",
+        });
+        setIsEditable(true);
+    }
+
+    if (!data) {
+        return (
+            <div>
+                <h2 className="font-serif text-xl font-semibold text-stone-800 mb-6">Saved Addresses</h2>
+                <div className="bg-white rounded-xl border border-stone-200 p-6">
+                    <div className="border-2 border-dashed border-stone-200 rounded-xl p-8 text-center">
+                        <MapPin className="h-10 w-10 text-stone-300 mx-auto mb-4" />
+                        <p className="text-stone-500 mb-4">No addresses saved yet</p>
+                        <Button onClick={handleAddAddress} variant="outline" className="rounded-xl">
+                            Add New Address
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function saveAddressToLocalStorage() {
+        if (!data) return;
+        localStorage.setItem(
+            `shippingAddress_${id}`,
+            JSON.stringify({
+                address: data.address,
+                apartment: data.apartment,
+                city: data.city,
+                state: data.state,
+                zipCode: data.zip,
+                userId: id,
+            })
+        );
+        setIsEditable(false);
+    }
+
+    return (
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-[#2C3E2D] mb-6" style={{ fontFamily: "Playfair Display, serif" }}>
+                Shipping Address
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                    <Label htmlFor="address" className="text-[#2C3E2D] mb-2 block">
+                        Address
+                    </Label>
+                    <Input
+                        id="address"
+                        name="address"
+                        required
+                        disabled={!isEditable}
+                        value={data.address}
+                        onChange={handleInputChange}
+                        className="border-[#E8E4DC] focus:ring-[#6B7B6E] focus:border-[#6B7B6E]"
+                        placeholder="Street address"
+                    />
+                </div>
+                <div className="md:col-span-2">
+                    <Label htmlFor="apartment" className="text-[#2C3E2D] mb-2 block">
+                        Apartment, suite, etc. (optional)
+                    </Label>
+                    <Input
+                        id="apartment"
+                        name="apartment"
+                        value={data.apartment}
+                        disabled={!isEditable}
+                        onChange={handleInputChange}
+                        className="border-[#E8E4DC] focus:ring-[#6B7B6E] focus:border-[#6B7B6E]"
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="city" className="text-[#2C3E2D] mb-2 block">
+                        City
+                    </Label>
+                    <Input
+                        id="city"
+                        name="city"
+                        required
+                        value={data.city}
+                        disabled={!isEditable}
+                        onChange={handleInputChange}
+                        className="border-[#E8E4DC] focus:ring-[#6B7B6E] focus:border-[#6B7B6E]"
+                    />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <Label htmlFor="state" className="text-[#2C3E2D] mb-2 block">
+                            State
+                        </Label>
+                        <Input
+                            id="state"
+                            name="state"
+                            required
+                            value={data.state}
+                            disabled={!isEditable}
+                            onChange={handleInputChange}
+                            className="border-[#E8E4DC] focus:ring-[#6B7B6E] focus:border-[#6B7B6E]"
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="zipCode" className="text-[#2C3E2D] mb-2 block">
+                            ZIP Code
+                        </Label>
+                        <Input
+                            id="zip"
+                            name="zip"
+                            required
+                            value={data.zip}
+                            disabled={!isEditable}
+                            onChange={handleInputChange}
+                            className="border-[#E8E4DC] focus:ring-[#6B7B6E] focus:border-[#6B7B6E]"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-center gap-2 mt-4">
+                {!isEditable ? (
+                    <Button
+                        onClick={() => {
+                            setIsEditable((prev) => !prev);
+                        }}
+                    >
+                        Make Changes
+                    </Button>
+                ) : (
+                    <Button onClick={saveAddressToLocalStorage}>Save Changes</Button>
+                )}
+            </div>
+        </div>
+    );
 }
 
 const OrderCard = ({ order }: { order: Order }) => {
@@ -134,6 +324,7 @@ const Profile = () => {
         name: user?.name || "",
         email: user?.email || "",
         phone: user?.phone || "",
+        id: user?.id || "",
     });
 
     const { data, isLoading, isError } = useQuery({
@@ -154,11 +345,16 @@ const Profile = () => {
 
     useEffect(() => {
         if (user) {
+            console.log(user);
             setFormData({
                 name: user.name,
                 email: user.email,
                 phone: user.phone || "",
+                id: user.id || "",
             });
+
+            const address = JSON.parse(localStorage.getItem("shippingAddress") || "{}");
+            console.log(address);
         }
     }, [user]);
 
@@ -375,20 +571,7 @@ const Profile = () => {
                             )}
 
                             {/* Addresses Tab */}
-                            {activeTab === "addresses" && (
-                                <div>
-                                    <h2 className="font-serif text-xl font-semibold text-stone-800 mb-6">Saved Addresses</h2>
-                                    <div className="bg-white rounded-xl border border-stone-200 p-6">
-                                        <div className="border-2 border-dashed border-stone-200 rounded-xl p-8 text-center">
-                                            <MapPin className="h-10 w-10 text-stone-300 mx-auto mb-4" />
-                                            <p className="text-stone-500 mb-4">No addresses saved yet</p>
-                                            <Button variant="outline" className="rounded-xl">
-                                                Add New Address
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            {activeTab === "addresses" && formData.id !== "" && <Address id={formData.id} />}
                         </div>
                     </div>
                 </div>

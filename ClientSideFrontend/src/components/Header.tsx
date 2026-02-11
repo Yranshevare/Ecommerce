@@ -23,13 +23,13 @@ const Header = () => {
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link className="nav-link" href="/">
+                    <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700" href="/">
                         Home
                     </Link>
-                    <Link className="nav-link" href="/products">
+                    <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700"  href="/products">
                         All Products
                     </Link>
-                    <Link className="nav-link" href="#">
+                    <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700"  href="/About">
                         About
                     </Link>
                 </nav>
@@ -40,14 +40,14 @@ const Header = () => {
                     {isAuthenticated ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="hidden sm:flex items-center gap-2">
+                                <Button variant="ghost" className="hidden hover:bg-transparent cursor-pointer sm:flex items-center gap-2">
                                     <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
                                         <span className="text-emerald-700 text-sm font-semibold">{user?.name?.charAt(0).toUpperCase()}</span>
                                     </div>
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 bg-white">
+                            <DropdownMenuContent align="end" className="w-48 bg-gray-100 border-gray-300 shadow-md">
                                 <DropdownMenuItem asChild className="hover:bg-gray-200 cursor-pointer duration-150">
                                     <Link href="/Profile" className="flex gap-2">
                                         <User className="h-4 w-4" /> Profile
@@ -74,7 +74,7 @@ const Header = () => {
 
                     {/* Cart */}
                     <Link href="/cart">
-                        <Button variant="ghost" size="icon" className="relative">
+                        <Button variant="ghost" size="icon" className="relative hover:bg-emerald-100 cursor-pointer">
                             <ShoppingBag />
                             {totalItems > 0 && (
                                 <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-emerald-700 text-[10px] text-white flex items-center justify-center">
@@ -101,7 +101,7 @@ const Header = () => {
                         <Link href="/products" className="mobile-link">
                             All Products
                         </Link>
-                        <Link href="#" className="mobile-link">
+                        <Link href="/About" className="mobile-link">
                             About
                         </Link>
                     </div>

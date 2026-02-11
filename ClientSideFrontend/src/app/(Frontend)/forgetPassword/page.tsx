@@ -18,7 +18,7 @@ export default function ForgotPassword() {
         setLoading(true);
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${server}/resetPassword?email=${email}`,
+            redirectTo: `${server}/auth/callback`,
         });
 
         if (error) {
@@ -39,20 +39,14 @@ export default function ForgotPassword() {
                     <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
                         {/* Header */}
                         <div className="text-center mb-8">
-                            <h1 className="font-serif text-3xl font-semibold text-stone-800 mb-2">
-                                Forgot Password
-                            </h1>
-                            <p className="text-stone-500">
-                                We’ll send you a password reset link
-                            </p>
+                            <h1 className="font-serif text-3xl font-semibold text-stone-800 mb-2">Forgot Password</h1>
+                            <p className="text-stone-500">We’ll send you a password reset link</p>
                         </div>
 
                         {/* Email */}
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-stone-700">
-                                    Email Address
-                                </label>
+                                <label className="text-sm font-medium text-stone-700">Email Address</label>
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-stone-400" />
                                     <Input

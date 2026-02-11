@@ -45,14 +45,14 @@ const Checkout = () => {
     });
     useEffect(() => {
         setFormData((prev) => ({ ...prev, email: user?.email || "", name: user?.name || "", phone: user?.phone || "" }));
-    }, [user]);
-
-    useEffect(() => {
-        if (localStorage.getItem("shippingAddress")) {
-            const shippingAddress = JSON.parse(localStorage.getItem("shippingAddress") || "");
+        if (localStorage.getItem(`shippingAddress_${user?.id}`)) {
+            const shippingAddress = JSON.parse(localStorage.getItem(`shippingAddress_${user?.id}`) || "");
             setFormData((prev) => ({ ...prev, ...shippingAddress }));
         }
-    }, []);
+    }, [user]);
+
+    // useEffect(() => {
+    // }, []);
 
     // const shipping = subtotal > 100 ? 0 : 9.99;
     // const tax = subtotal * 0.08;
@@ -99,6 +99,7 @@ const Checkout = () => {
                 email: formData.email,
                 paymentMethod,
                 totalPrice: String(subtotal),
+                userId: user?.id
             };
     
             const res = await axios.post(`/api/Order/placeOrder?token=${token}`, payload);
@@ -107,7 +108,7 @@ const Checkout = () => {
     
             if (saveAddress) {
                 localStorage.setItem(
-                    "shippingAddress",
+                    `shippingAddress_${user?.id}`,
                     JSON.stringify({
                         firstName: formData.name,
                         address: formData.address,
@@ -115,6 +116,7 @@ const Checkout = () => {
                         city: formData.city,
                         state: formData.state,
                         zipCode: formData.zipCode,
+                        userId: user?.id
                     })
                 );
             }
