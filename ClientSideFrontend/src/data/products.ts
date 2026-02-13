@@ -6,6 +6,7 @@ export interface Product {
     category: string;
     description: string;
     specification: { [key: string]: string };
+    updatedAt: string
 }
 
 // export const products: Product[] = [

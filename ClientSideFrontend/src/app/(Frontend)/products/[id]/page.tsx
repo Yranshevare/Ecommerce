@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ShoppingCart, Heart, Truck, Shield, RotateCcw, Minus, Plus, ChevronLeft, ChevronRight, Loader, MoveLeft, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, ChevronLeft, ChevronRight, Loader, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/data/products";
 import Header from "@/components/Header";

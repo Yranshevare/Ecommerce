@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 interface ProductCardProps {
     product: Product;
@@ -26,6 +27,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         });
     };
 
+    const isNew = useMemo(() => {
+        const FIVE_DAYS_IN_MS = 5 * 24 * 60 * 60 * 1000;
+        return Date.now() - new Date(product.updatedAt).getTime() <= FIVE_DAYS_IN_MS;
+    }, [product.updatedAt]);
+
     return (
         <div
             onClick={() => router.push(`/products/${product.id}`)}
@@ -41,13 +47,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     />
 
                     {/* Badges */}
-                    {/* <div className="absolute top-3 left-3 flex flex-col gap-2">
-                    {product.isNew && <span className="px-2.5 py-1 text-xs font-medium bg-emerald-700 text-stone-50 rounded-full">New</span>}
-                    {product.isBestseller && (
-                        <span className="px-2.5 py-1 text-xs font-medium bg-stone-800 text-stone-50 rounded-full">Bestseller</span>
-                    )}
-                    {product.originalPrice && <span className="px-2.5 py-1 text-xs font-medium bg-red-500 text-stone-50 rounded-full">Sale</span>}
-                </div> */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-2">
+                        {product.price[0].discount && (
+                            <span className="px-2.5 py-1 text-xs font-medium bg-red-500 text-stone-50 rounded-full">
+                                {product.price[0].discount}% off
+                            </span>
+                        )}
+                        {isNew && <span className="px-2.5 py-1 text-xs font-medium bg-green-500 text-white rounded-full">New Arrival</span>}
+                    </div>
 
                     {/* Out of Stock Overlay */}
                     {/* {!product.inStock && (
@@ -106,9 +113,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     }}
                 >
                     <ShoppingCart className="sm:h-4 sm:w-4 h-2 w-2" />
-                    <span className="text-[10px]">
-                        Add to Cart
-                    </span>
+                    <span className="text-[10px]">Add to Cart</span>
                 </Button>
             </div>
         </div>

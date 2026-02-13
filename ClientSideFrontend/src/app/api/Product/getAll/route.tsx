@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
             },
             omit: {
                 createdAt: true,
-                updatedAt: true,
             },
         });
         return response({ message: "Product Fetched Successfully", status: 200, data: product });

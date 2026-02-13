@@ -158,7 +158,7 @@ const About = () => {
                             </div>
                             <div className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-stone-200">
                                 <Mail className="w-6 h-6 text-emerald-700" />
-                                <span className="text-sm text-stone-600">hello@nestora.com</span>
+                                <span className="text-sm text-stone-600">ojha.signatures@gmail.com</span>
                             </div>
                             <div className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-stone-200">
                                 <Phone className="w-6 h-6 text-emerald-700" />

@@ -1,11 +1,10 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
-import { User, Package, MapPin, Settings, LogOut, ChevronRight, Truck, CheckCircle, Clock, SplinePointer, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { User, Package, MapPin, LogOut, ChevronRight, Truck, Clock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
@@ -16,9 +15,7 @@ import Link from "next/link";
 import axios from "axios";
 import { supabase } from "@/lib/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
-import { set } from "react-hook-form";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@radix-ui/react-checkbox";
 
 export interface OrderItem {
     productId: string;
@@ -361,11 +358,11 @@ const Profile = () => {
     if (isLoading || loading) {
         return (
             <div className="min-h-screen flex flex-col bg-stone-50">
-                <Header />
+                {/* <Header /> */}
                 <main className="flex-1 flex items-center justify-center py-12 px-4">
                     <Loader2 className="animate-spin" />
                 </main>
-                <Footer />
+                {/* <Footer /> */}
             </div>
         );
     }

@@ -34,16 +34,16 @@ const Footer = () => {
                             Premium home textiles crafted for comfort and everyday luxury.
                         </p>
                         <div className="flex gap-4 mt-6">
-                            <a href="#" className="text-stone-50/70 hover:text-stone-50 transition-colors">
+                            <a href="https://www.instagram.com/ojha.signatures" className="text-stone-50/70 hover:text-stone-50 transition-colors">
                                 <Instagram className="w-5 h-5" />
                             </a>
-                            <a href="#" className="text-stone-50/70 hover:text-stone-50 transition-colors">
+                            <a href="https://www.facebook.com/profile.php?id=100028183724384" className="text-stone-50/70 hover:text-stone-50 transition-colors">
                                 <Facebook className="w-5 h-5" />
                             </a>
-                            <a href="#" className="text-stone-50/70 hover:text-stone-50 transition-colors">
+                            {/* <a href="#" className="text-stone-50/70 hover:text-stone-50 transition-colors">
                                 <Twitter className="w-5 h-5" />
-                            </a>
-                            <a href="#" className="text-stone-50/70 hover:text-stone-50 transition-colors">
+                            </a> */}
+                            <a href="mailto:ojha.signatures@gmail.com" className="text-stone-50/70 hover:text-stone-50 transition-colors">
                                 <Mail className="w-5 h-5" />
                             </a>
                         </div>

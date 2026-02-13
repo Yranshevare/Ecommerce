@@ -7,18 +7,37 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+// import { useQuery } from "@tanstack/react-query";
+// import axios from "axios";
+
+const category: { name: string; link: string }[] = [
+    { name: "All Products", link: "/products" },
+    { name: "Bedsheets", link: "/products?category=beedsheet" },
+    { name: "Chair Cover", link: "/products?category=chairCover" },
+    { name: "Sofa Cover", link: "/products/?category=sofaCover" },
+];
 
 const Header = () => {
     const { totalItems } = useCart();
     const { user, isAuthenticated, logout } = useAuth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // const { data, isLoading } = useQuery({
+    //     queryKey: ["categories"],
+    //     queryFn: async () => {
+    //         const cat = await axios.get("/api/category/getAll");
+    //         const categories = [...cat.data.data, { name: "All Products" }];
+    //         return categories;
+    //     },
+    // });
+    // console.log(data);
+
     return (
         <header className="sticky top-0 z-50 w-full bg-stone-50/95 backdrop-blur border-b border-stone-200">
             <div className="flex h-16 items-center justify-between lg:px-20 px-5">
                 {/* Logo */}
                 <Link href="/" className="font-serif text-2xl font-semibold text-stone-800">
-                    <img src="/logo3.png" alt="" className="h-15"/>
+                    <img src="/logo3.png" alt="" className="h-15" />
                 </Link>
 
                 {/* Desktop Nav */}
@@ -26,10 +45,16 @@ const Header = () => {
                     <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700" href="/">
                         Home
                     </Link>
-                    <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700"  href="/products">
-                        All Products
-                    </Link>
-                    <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700"  href="/About">
+                    {category.map((item, index) => (
+                        <Link
+                            key={index}
+                            className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700"
+                            href={item.link}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                    <Link className="nav-link hover:scale-112 duration-150 hover:border-b border-0 hover:text-emerald-700" href="/About">
                         About
                     </Link>
                 </nav>
@@ -98,9 +123,16 @@ const Header = () => {
                         <Link href="/" className="mobile-link">
                             Home
                         </Link>
-                        <Link href="/products" className="mobile-link">
+                        {/* <Link href="/products" className="mobile-link">
                             All Products
-                        </Link>
+                        </Link> */}
+                        {
+                            category.map((item, index) => (
+                                <Link key={index} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} href={item.link} className="mobile-link">
+                                    {item.name}
+                                </Link>
+                            ))
+                        }
                         <Link href="/About" className="mobile-link">
                             About
                         </Link>

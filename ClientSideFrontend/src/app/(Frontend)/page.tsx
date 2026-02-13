@@ -144,33 +144,35 @@ export default function Home() {
                 {/* Categories section */}
                 <section id="collection" className="py-20 lg:px-20 px-5 bg-stone-50">
                     <div className=" w-full">
-                        <div  className="text-center mb-12">
+                        <div className="text-center mb-12">
                             <h2 className="text-3xl md:text-4xl font-serif font-semibold text-stone-800 mb-4">Shop by Category</h2>
                             <p className="text-stone-500 max-w-md mx-auto">Find the perfect pieces to transform your home into a cozy sanctuary</p>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-6">
-                            {categories.map((category, index) => (
-                                <Link
-                                    key={category.title}
-                                    href={category.href}
-                                    className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-500"
-                                    style={{ animationDelay: `${index * 100}ms` }}
-                                >
-                                    <div className="aspect-square overflow-hidden">
-                                        <img
-                                            src={category.image}
-                                            alt={category.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                        />
-                                    </div>
-                                    <div className="absolute inset-0 bg-gradient-to-t from-stone-800/70 via-stone-800/20 to-transparent" />
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 text-stone-50">
-                                        <h3 className="text-2xl font-serif font-semibold mb-2">{category.title}</h3>
-                                        <p className="text-stone-50/80 text-sm">{category.description}</p>
-                                    </div>
-                                </Link>
-                            ))}
+                        <div className="overflow-auto">
+                            <div className="flex gap-6">
+                                {categories.map((category, index) => (
+                                    <Link
+                                        key={category.title}
+                                        href={category.href}
+                                        className="group min-w-[250px] relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-500"
+                                        style={{ animationDelay: `${index * 100}ms` }}
+                                    >
+                                        <div className="aspect-square overflow-hidden">
+                                            <img
+                                                src={category.image}
+                                                alt={category.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            />
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-stone-800/70 via-stone-800/20 to-transparent" />
+                                        <div className="absolute bottom-0 left-0 right-0 p-6 text-stone-50">
+                                            <h3 className="text-2xl font-serif font-semibold mb-2">{category.title}</h3>
+                                            <p className="text-stone-50/80 text-sm">{category.description}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -188,11 +190,11 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 sm:gap-4 gap-2 md:gap-6">
                             {products.map((product) => (
                                 <div
                                     key={product.id}
-                                    className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                                    className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
                                 >
                                     <div className="aspect-square overflow-hidden bg-stone-100">
                                         <img
@@ -201,18 +203,22 @@ export default function Home() {
                                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         />
                                     </div>
-                                    <div className="p-5">
-                                        <span className="text-xs font-medium text-stone-500 uppercase tracking-wide">{product.category}</span>
-                                        <h3 className="text-base font-medium text-stone-800 mt-1 mb-3 line-clamp-2">{product.name}</h3>
+                                    <div className="sm:px-5 p-1">
+                                        <span className="text-xs font-medium text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                                            {product.category}
+                                        </span>
+                                        <h3 className="text-base font-medium text-stone-800  line-clamp-2 ">{product.name}</h3>
                                         <div className="flex items-center gap-2 mb-4">
-                                            <span className="text-lg font-semibold text-stone-800">RS {product.price}</span>
+                                            <span className="sm:text-lg text-sm font-semibold text-stone-800">RS {product.price}</span>
                                             {product.originalPrice && (
-                                                <span className="text-sm text-stone-500 line-through">RS {product.originalPrice}</span>
+                                                <span className="sm:text-xs text-[10px] text-stone-500 line-through">RS {product.originalPrice}</span>
                                             )}
                                         </div>
+                                    </div>
+                                    <div className="sm:p-5 p-2">
                                         <Link href={`/products`}>
-                                            <Button variant="product" className="w-full" size="default">
-                                                <ShoppingCart className="h-4 w-4" />
+                                            <Button variant="product" className="w-full " size="default">
+                                                <ShoppingCart className="sm:h-4 sm:w-4 h-2 w-2" />
                                                 Explore More
                                             </Button>
                                         </Link>

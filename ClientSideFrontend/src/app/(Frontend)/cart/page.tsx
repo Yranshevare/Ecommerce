@@ -6,11 +6,26 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
+import { useCallback } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const Cart = () => {
     const { items, removeFromCart, updateQuantity, subtotal, clearCart } = useCart();
+    const { isAuthenticated } = useAuth();
+    const router = useRouter();
 
     const breadcrumbItems = [{ label: "Cart" }];
+
+    const handleProceedToCheckout = useCallback(() => {
+        if (!isAuthenticated) {
+            alert("you are not signed in. Please sign in to proceed to checkout.");
+            router.push("/Login");
+            return;
+        }
+
+        router.push("/checkout");
+    }, [isAuthenticated]);
 
     if (items.length === 0) {
         return (
@@ -65,7 +80,10 @@ const Cart = () => {
                     {/* Cart Items */}
                     <div className="lg:col-span-2 space-y-4">
                         {items.map((item) => (
-                            <div key={`${item.product.id, item.product.price.key}`} className="bg-white rounded-xl p-4 md:p-6 shadow-sm flex flex-col sm:flex-row gap-4">
+                            <div
+                                key={`${(item.product.id, item.product.price.key)}`}
+                                className="bg-white rounded-xl p-4 md:p-6 shadow-sm flex flex-col sm:flex-row gap-4"
+                            >
                                 {/* Product Image */}
                                 <Link href={`/product/${item.product.id}`} className="flex-shrink-0">
                                     <img
@@ -94,11 +112,10 @@ const Cart = () => {
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>
-
                                     </div>
-                                        <div className="flex items-center gap-2 mb-4">
-                                            <span className="text-xs bg-[#F5F3EE] text-[#6B7B6E] px-2 py-1 rounded"> {item.product.price.key}</span>
-                                        </div>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <span className="text-xs bg-[#F5F3EE] text-[#6B7B6E] px-2 py-1 rounded"> {item.product.price.key}</span>
+                                    </div>
 
                                     {/* <div className="flex items-center gap-2 mb-4">
                                         <span className="text-xs bg-[#F5F3EE] text-[#6B7B6E] px-2 py-1 rounded">Size: {item.selectedSize}</span>
@@ -170,11 +187,12 @@ const Cart = () => {
                                 </div>
                             </div>
 
-                            <Link href="/Checkout">
-                                <Button className="w-full bg-[#2C3E2D] hover:bg-[#1a2a1b] text-white py-3 rounded-lg mb-4">
-                                    Proceed to Checkout
-                                </Button>
-                            </Link>
+                            <Button
+                                onClick={handleProceedToCheckout}
+                                className="w-full bg-[#2C3E2D] hover:bg-[#1a2a1b] text-white py-3 rounded-lg mb-4"
+                            >
+                                Proceed to Checkout
+                            </Button>
 
                             {/* Promo Code */}
                             {/* <div className="mt-6">

@@ -29,10 +29,7 @@ export default function ResetPassword() {
         setError,
     } = useForm({ resolver: zodResolver(resetPasswordSchema) });
 
-    const handlePasswordReset = async (formData: {
-        newPassword: string;
-        confirmPassword: string;
-    }) => {
+    const handlePasswordReset = async (formData: { newPassword: string; confirmPassword: string }) => {
         setIsSubmitting(true);
 
         const { newPassword, confirmPassword } = formData;
@@ -71,27 +68,17 @@ export default function ResetPassword() {
                                     <CheckCircle className="h-7 w-7 text-emerald-700" />
                                 </div>
                             </div>
-                            <h1 className="font-serif text-3xl font-semibold text-stone-800 mb-2">
-                                Reset Password
-                            </h1>
+                            <h1 className="font-serif text-3xl font-semibold text-stone-800 mb-2">Reset Password</h1>
                             <p className="text-stone-500 text-sm">
-                                Create a new password for{" "}
-                                <span className="font-medium text-stone-700">
-                                    {email}
-                                </span>
+                                Create a new password for <span className="font-medium text-stone-700">{email}</span>
                             </p>
                         </div>
 
                         {/* Form */}
-                        <form
-                            onSubmit={handleSubmit(handlePasswordReset)}
-                            className="space-y-5"
-                        >
+                        <form onSubmit={handleSubmit(handlePasswordReset)} className="space-y-5">
                             {/* New Password */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-stone-700">
-                                    New Password
-                                </label>
+                                <label className="text-sm font-medium text-stone-700">New Password</label>
                                 <div className="relative">
                                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-stone-400" />
                                     <Input
@@ -101,18 +88,12 @@ export default function ResetPassword() {
                                         className="pl-10 h-12 rounded-xl border-stone-300 focus:border-emerald-700 focus:ring-emerald-700"
                                     />
                                 </div>
-                                {errors.newPassword && (
-                                    <p className="text-xs text-red-600">
-                                        {errors.newPassword.message}
-                                    </p>
-                                )}
+                                {errors.newPassword && <p className="text-xs text-red-600">{errors.newPassword.message}</p>}
                             </div>
 
                             {/* Confirm Password */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-stone-700">
-                                    Confirm Password
-                                </label>
+                                <label className="text-sm font-medium text-stone-700">Confirm Password</label>
                                 <div className="relative">
                                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-stone-400" />
                                     <Input
@@ -122,11 +103,7 @@ export default function ResetPassword() {
                                         className="pl-10 h-12 rounded-xl border-stone-300 focus:border-emerald-700 focus:ring-emerald-700"
                                     />
                                 </div>
-                                {errors.confirmPassword && (
-                                    <p className="text-xs text-red-600">
-                                        {errors.confirmPassword.message}
-                                    </p>
-                                )}
+                                {errors.confirmPassword && <p className="text-xs text-red-600">{errors.confirmPassword.message}</p>}
                             </div>
 
                             {/* Submit */}

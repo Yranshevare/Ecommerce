@@ -5,32 +5,31 @@ import Footer from "@/components/Footer";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProductGrid from "@/components/ProductGrid";
 import Pagination from "@/components/Pagination";
-import { categories } from "@/data/products";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 
 const PRODUCTS_PER_PAGE = 8;
 
-// const defaultFilters: Filters = {
-//     priceRange: [0, 200],
-//     materials: [],
-//     sizes: [],
-//     colors: [],
-//     inStock: false,
-// };
-
-type SortOption = "newest" | "price-asc" | "price-desc" | "popular";
+type SortOption = "discount" | "price-asc" | "price-desc" | "newest";
 
 const Products = () => {
-    // const searchParams = useSearchParams();
-    const [category, setCategory] = useState<string | undefined>(undefined);
-    console.log(category);
+    const searchParams = useSearchParams();
+    const cat = searchParams.get("category");
+    const [category, setCategory] = useState<string | undefined>(cat || undefined);
     // const [filters, setFilters] = useState<Filters>(defaultFilters);
-    const [sortBy, setSortBy] = useState<SortOption>("popular");
+    const [sortBy, setSortBy] = useState<SortOption>("newest");
     const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        if (cat) {
+            setCategory(cat);
+        } else {
+            setCategory(undefined);
+        }
+    }, [cat]);
 
     // const categoryInfo = category ? categories.find((c) => c.slug === category) : null;
 
@@ -64,53 +63,32 @@ const Products = () => {
     const filteredProducts = useMemo(() => {
         if (!data) return [];
         let result = data.data;
-
         // Filter by category
         if (category) {
-            result = result.filter((p: any) => p.category === category);
+            console.log(category);
+            result = result.filter((p: any) => p.category.trim().toLowerCase().replaceAll(" ", "") === category.trim().toLowerCase().replaceAll(" ", ""));
         }
-
-        // Filter by price range
-        // result = result.filter((p) => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]);
-
-        // Filter by materials
-        // if (filters.materials.length > 0) {
-        //     result = result.filter((p) => filters.materials.includes(p.material));
-        // }
-
-        // // Filter by sizes
-        // if (filters.sizes.length > 0) {
-        //     result = result.filter((p) => filters.sizes.includes(p.size));
-        // }
-
-        // // Filter by colors
-        // if (filters.colors.length > 0) {
-        //     result = result.filter((p) => filters.colors.includes(p.color));
-        // }
-
-        // // Filter by stock
-        // if (filters.inStock) {
-        //     result = result.filter((p) => p.inStock);
-        // }
 
         // Sort
         switch (sortBy) {
             case "price-asc":
-                result = [...result].sort((a, b) => a.price - b.price);
+                result = [...result].sort((a, b) => a.price[0].value - b.price[0].value);
                 break;
             case "price-desc":
-                result = [...result].sort((a, b) => b.price - a.price);
+                result = [...result].sort((a, b) => b.price[0].value - a.price[0].value);
+                break;
+            case "discount":
+                result = [...result].sort(
+                    (a, b) => (b.price[0].discount ? b.price[0].discount : 0) - (a.price[0].discount ? a.price[0].discount : 0)
+                );
                 break;
             case "newest":
-                result = [...result].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-                break;
-            case "popular":
             default:
-                result = [...result].sort((a, b) => (b.isBestseller ? 1 : 0) - (a.isBestseller ? 1 : 0));
+                result = [...result].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
         }
 
         return result;
-    }, [category, sortBy, data]);
+    }, [category, sortBy, data, cat]);
 
     // Pagination
     const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
@@ -121,10 +99,6 @@ const Products = () => {
         setCurrentPage(1);
     };
 
-    // const handleFiltersChange = (newFilters: Filters) => {
-    //     setFilters(newFilters);
-    //     setCurrentPage(1);
-    // };
 
     const handleSortChange = (value: SortOption) => {
         setSortBy(value);
@@ -168,7 +142,12 @@ const Products = () => {
                                     {data.categoryData.map((cat: { name: string }, index: number) => (
                                         <Button
                                             key={index}
-                                            variant={cat.name === category ? "default" : "outline"}
+                                            variant={
+                                                cat.name.trim().toLowerCase().replaceAll(" ", "") === category?.trim().toLocaleLowerCase().replaceAll(" ", "") ||
+                                                (cat.name === "All Products" && !category)
+                                                    ? "default"
+                                                    : "outline"
+                                            }
                                             size="sm"
                                             onClick={() => handleCategoryChange(cat.name)}
                                         >
@@ -185,8 +164,8 @@ const Products = () => {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-gray-50">
-                                    <SelectItem value="popular">Popular</SelectItem>
                                     <SelectItem value="newest">Newest</SelectItem>
+                                    <SelectItem value="discount">Discount</SelectItem>
                                     <SelectItem value="price-asc">Price: Low to High</SelectItem>
                                     <SelectItem value="price-desc">Price: High to Low</SelectItem>
                                 </SelectContent>
